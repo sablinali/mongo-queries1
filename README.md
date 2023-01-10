@@ -111,7 +111,7 @@ Query operators allow us to find data within the database.
 To list all documents in a collection we use `find`.
 
 ```javascript
-> db.restaurants.find({})
+> db.users.find({ age: 18 }, { name: 1, _id: 0} )
 ```
 
 :::info
@@ -258,14 +258,37 @@ Value | Order | Example
 Practice the following queries:
 
 - Find the restaurant with id `30112340`.
+Solución: db.restaurants.find({restaurant_id: "30112340"});
+
 - Find `May May Kitchen`.
+Solución: db.restaurants.find({name:"May May Kitchen"});
+
 - Find the restaurants where their cuisine is `Tapas`.
+Solución: db.restaurants.find({cuisine: "Tapas"});
+
 - Find the restaurants in postal code `11208`.
+Solución: db.restaurants.find({"address.zipcode": "11208"});
+
 - Find all restaurants that have a score greater or equal than `70`.
-- Find all restaurants in `Brooklyn`that have a score greater than `80`
+Solución: db.restaurants.find({"grades.score": {$gte: 70}});
+
+- Find all restaurants in `Brooklyn`that have a score greater than `50`.
+Solución: db.restaurants.find({$and: [{"borough": "Brooklyn"},{"grades.score":{$gt: 50}}]});
+
 - All restaurants with `Chilean` or `Czech` cuisine.
+Solución: db.restaurants.find({$or: [{"cuisine": "Chilean"},{"cuisine":"Czech"}]});
+
 - All restaurants with grade `A` in **second** position of the array.
+Solución: db.restaurants.find({"grades.1.grade": "A"})
+
 - All restaurants with grades `A` or `B`.
+Solución: db.restaurants.find({$or: [{"grades.grade": "A"},{"grades.grade": "B"}]})
+
 - All restaurants that have a review made in `2014-09-16`.
+Solución: db.restaurants.find({"grades.date": ISODate("2014-09-16")})
+
 - All restaurant their cuisine is `Tapas` ordered by `name` in ascending (normal) order.
+Solución: db.restaurants.find({"cuisine": "Tapas"}).sort({"name": 1})
+
 - How many restaurants have been graded after `2015-01-01`.
+Solución: db.restaurants.find({"grades.date": {"$gt": ISODate("2015-01-01")}}).count()
